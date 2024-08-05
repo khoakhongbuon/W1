@@ -1,0 +1,58 @@
+﻿@model IEnumerable<TD.Models.ToDoItem>
+
+@{
+    ViewData["Title"] = "ToDo List";
+}
+
+<h2>ToDo List</h2>
+
+<form method="get" asp-controller="Home" asp-action="Index">
+    <input type="text" name="searchString" placeholder="Search..." value="@ViewBag.CurrentFilter" />
+    <button type="submit">Search</button>
+</form>
+
+<form method="post" asp-controller="Home" asp-action="Create">
+    <input type="text" name="Title" placeholder="New ToDo..." required />
+    <button type="submit">Add</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Completed</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>
+                    @if (item.IsCompleted)
+                    {
+                        <span>Yes</span>
+                    }
+                    else
+                    {
+                        <span>No</span>
+                    }
+                </td>
+                <td>
+                    @if (!item.IsCompleted)
+                    {
+                        <form method="post" asp-controller="Home" asp-action="Complete">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button type="submit">Complete</button>
+                        </form>
+                    }
+                    <form method="post" asp-controller="Home" asp-action="Delete">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
